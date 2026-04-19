@@ -68,6 +68,13 @@ print("\n[2/4] Cleaning data …")
 before = len(df)
 
 # Datetime
+# Safety: handle both possible column name formats
+if "transactiontime" in df.columns:
+    df.rename(columns={"transactiontime": "transaction_time"}, inplace=True)
+if "transaction_time" not in df.columns:
+    # Print actual columns to debug
+    raise ValueError(f"Cannot find time column. Actual columns: {list(df.columns)}")
+
 df["transaction_time"] = pd.to_datetime(df["transaction_time"], errors="coerce")
 df.dropna(subset=["transaction_time"], inplace=True)
 

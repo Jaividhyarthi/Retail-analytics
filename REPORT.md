@@ -120,6 +120,13 @@ CREATE TABLE customer_response (
 df.columns = df.columns.str.strip().str.lower().str.replace(r"[\s\-]+", "_", regex=True)
 
 # 2. Parse datetime
+# Safety: handle both possible column name formats
+if "transactiontime" in df.columns:
+    df.rename(columns={"transactiontime": "transaction_time"}, inplace=True)
+if "transaction_time" not in df.columns:
+    # Print actual columns to debug
+    raise ValueError(f"Cannot find time column. Actual columns: {list(df.columns)}")
+
 df["transaction_time"] = pd.to_datetime(df["transaction_time"], errors="coerce")
 df.dropna(subset=["transaction_time"], inplace=True)
 
