@@ -1,0 +1,13 @@
+run = "streamlit run app.py --server.port 8080 --server.headless true"
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "streamlit run app.py --server.port 8080 --server.headless true"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
